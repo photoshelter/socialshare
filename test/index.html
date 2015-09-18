@@ -9,7 +9,9 @@
 
 <p>For manually testing the social share code's functionality with
 real services. Make sure the social crawlers can access your page for
-previews to work.</p>
+previews to work. In the source code of this page, uncomment the social
+sharing services you'd like to load/test and insert your app ID where
+appropriate (for Facebook and Pinterest).</p>
 
 <p>The function's signature is:
 <pre>
@@ -60,12 +62,11 @@ the second argument.
 
 <!-- Load third party services code -->
 
+<! -- Facebook
 <script>
-	var DEV_ID = '159931337417';
-	var PROD_ID = '175862993435';
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId      : DEV_ID, 
+			appId      : 'YOUR-APP-ID-HERE',
 			xfbml      : true,
 			version    : 'v2.1'
 		});
@@ -78,7 +79,9 @@ the second argument.
 	 fjs.parentNode.insertBefore(js, fjs);
    }(document, 'script', 'facebook-jssdk'));
 </script>
+-->
 
+<! -- Twitter
 <script>
 window.twttr = (function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0],
@@ -88,23 +91,26 @@ window.twttr = (function(d, s, id) {
   js.id = id;
   js.src = "https://platform.twitter.com/widgets.js";
   fjs.parentNode.insertBefore(js, fjs);
- 
+
   t._e = [];
   t.ready = function(f) {
     t._e.push(f);
   };
- 
+
   return t;
 }(document, "script", "twitter-wjs"));
 </script>
+-->
 
-<!-- Place this tag in your head or just before your close body tag. -->
+<! -- Google
 <script src="https://apis.google.com/js/platform.js" async defer></script>
+-->
 
+<! -- Pinterest
 <script>
     window.pAsyncInit = function() {
         PDK.init({
-            appId: "1446668",
+            appId: "YOUR-APP-ID-HERE",
             cookie: true
         });
     };
@@ -117,5 +123,7 @@ window.twttr = (function(d, s, id) {
         pjs.parentNode.insertBefore(js, pjs);
     }(document, 'script', 'pinterest-jssdk'));
 </script>
+-->
+
 </body>
 </html>
