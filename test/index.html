@@ -1,0 +1,121 @@
+<html>
+<head>
+	<meta property="og:title" content="social share test page">
+	<meta property="og:site_name" content="test page">
+	<meta property="og:description" content="testing social share code">
+</head>
+<body>
+<h1>SocialShare test page</h1>
+
+<p>For manually testing the social share code's functionality with
+real services. Make sure the social crawlers can access your page for
+previews to work.</p>
+
+<p>The function's signature is:
+<pre>
+socialShare({String} service [, {Object} data, {Function} callback])
+</pre>
+Clicking each button below passes in the respective string for the
+first argument, and the text inputs below populate key/val pairs of
+the second argument.
+</p>
+
+<div style="margin-bottom:20px;">
+	<button onclick="socialShare('facebook', getData())">facebook</button>
+	<button onclick="socialShare('twitter', getData())">twitter</button>
+	<button onclick="socialShare('gplus', getData())">gplus</button>
+	<button onclick="socialShare('pinterest', getData())">pinterest</button>
+	<button onclick="socialShare('email', getData())">email</button>
+</div>
+
+<form id="data">
+	<input type="text" placeholder="key::value" />
+	<input type="text" placeholder="key::value" />
+	<input type="text" placeholder="key::value" />
+	<input type="text" placeholder="key::value" />
+</form>
+
+<button onclick="clearData()">Clear values</button>
+
+<script src="/asset/app/com/lib/O_O.lib.SocialShare.js"></script>
+<script>
+
+	function getInputs() {
+		return [].slice.call(document.querySelectorAll('#data input'));
+	}
+
+	function getData() {
+		return getInputs().reduce(function (res, item) {
+			item = item.value.split('::');
+			res[item[0]] = item[1];
+			return res;
+		}, {});
+	}
+
+	function clearData() {
+		getInputs().forEach(function (input) { input.value = ''; });
+	}
+
+</script>
+
+<!-- Load third party services code -->
+
+<script>
+	var DEV_ID = '159931337417';
+	var PROD_ID = '175862993435';
+	window.fbAsyncInit = function() {
+		FB.init({
+			appId      : DEV_ID, 
+			xfbml      : true,
+			version    : 'v2.1'
+		});
+	};
+  (function(d, s, id){
+	 var js, fjs = d.getElementsByTagName(s)[0];
+	 if (d.getElementById(id)) {return;}
+	 js = d.createElement(s); js.id = id;
+	 js.src = "//connect.facebook.net/en_US/sdk.js";
+	 fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+</script>
+
+<script>
+window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+ 
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+ 
+  return t;
+}(document, "script", "twitter-wjs"));
+</script>
+
+<!-- Place this tag in your head or just before your close body tag. -->
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+
+<script>
+    window.pAsyncInit = function() {
+        PDK.init({
+            appId: "1446668",
+            cookie: true
+        });
+    };
+
+    (function(d, s, id){
+        var js, pjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//assets.pinterest.com/sdk/sdk.js";
+        pjs.parentNode.insertBefore(js, pjs);
+    }(document, 'script', 'pinterest-jssdk'));
+</script>
+</body>
+</html>
