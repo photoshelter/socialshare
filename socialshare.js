@@ -20,8 +20,6 @@
  * share service triggers popup windows and as such user interaction
  * must initiate the call to this function to avoid being popup-blocked.
  *
- * @module O_O.lib.SocialShare
- *
  * @requires: twitter, facebook, gplus, and pinterest JavaScript SDKs/libs
  * must be loaded on page for sharing via each respective service. All
  * are optional. See each service's class for details on code to load.
@@ -34,12 +32,8 @@
  * Base class
  */
 function SocialShare() {}
-
-SocialShare.prototype = {
-	constructor: SocialShare,
-	share: function(data, cb) {
-		throw new Error('share() must be implemented by subclass');
-	}
+SocialShare.prototype.share = function(data, cb) {
+	throw new Error('share() must be implemented by subclass');
 };
 
 /**
@@ -51,7 +45,7 @@ FacebookShare.prototype = Object.create(SocialShare.prototype);
 /**
  * @param {Object} data
  * @param {String} data.url
- * @param {Object} cb
+ * @param {Function} cb
  * @requires Facebook JS SDK: https://developers.facebook.com/docs/javascript
  */
 FacebookShare.prototype.share = function(data, cb) {
@@ -77,7 +71,7 @@ TwitterShare.prototype = Object.create(SocialShare.prototype);
  * @param {Object} data
  * @param {String} data.url
  * @param {String} data.caption
- * @param {Object} cb
+ * @param {Function} cb
  * @requires Twitter SDK: https://dev.twitter.com/web/javascript
  */
 TwitterShare.prototype.share = function(data, cb) {
@@ -125,9 +119,7 @@ GPlusShare.prototype.share = function(data) {
 		throw new Error('Google plus library not loaded, what the heck.');
 
 	data = data || {};
-	var url = data.url || window.location.href;
-	url = encodeURIComponent(url);
-
+	var url = encodeURIComponent(data.url || window.location.href);
 	var href = 'https://plus.google.com/share?url={'+url+'}';
 
 	var onClick = function(e) {
@@ -152,10 +144,6 @@ PinterestShare.prototype = Object.create(SocialShare.prototype);
  * @param {String} data.imgUrl
  * @param {String} data.caption
  * @requires Pinterest JS SDK: https://developers.pinterest.com/docs/sdks/js/
- * The pinterest library must be loaded with the script tag containing the
- * following attribute: data-pin-build="parsePinBtns". This exposes
- * parsePinBtns to the window, so we can run it when necessary. See
- * http://stackoverflow.com/questions/9352021/how-can-i-rerender-pinterests-pin-it-button
  */
 PinterestShare.prototype.share = function(data) {
 	if (!window.PDK)
@@ -203,8 +191,9 @@ function makeQueryString(obj) {
 };
 
 /**
- * Creates an anchor, injects it into the document, simulates a click on it,
- * then cleans up after itself.
+ * Creates an anchor, injects it into the document, simulates a user clicking
+ * it, then cleans up after itself.
+ *
  * The purpose is to play nicely with popular APIs without having to manually
  * create anchors in view code all over the place. Instead we do it here once
  * and a caller can just say, e.g., "give me a twitter share!"
@@ -212,39 +201,24 @@ function makeQueryString(obj) {
  * @param {Object} attrs Key/val pairs, attributes to create on the HTML anchor
  * @param {Object} listeners Key/val pairs, on- style listeners
  * to attach to the HTML anchor
- * @param {Function} onPreClick Hook into the moment right after the anchor
- * has been inserted into the document but not yet clicked.
  */
-function simulateAnchorClick(attrs, listeners, onPreClick) {
+function simulateAnchorClick(attrs, listeners) {
 	var a = createAnchor(attrs, listeners);
-	var div = document.createElement('div');
-	/**
-	 * A hook in case the simulated click needs to be prevented from bubbling
-	 * and causing some undesired effect.
-	 */
-	div.setAttribute('class', 'anchor-wrapper');
 
-	div.appendChild(a);
-	document.body.appendChild(div);
-
-	onPreClick && onPreClick();
+	document.body.appendChild(a);
 
 	/**
-	 * X-browser click simulation. Using a wrapper element then grabbing
-	 * its first child because some services (lookin at you, pinterest)
-	 * replace the original DOM element (i.e. the `a` element above).
+	 * X-browser user click simulation.
 	 */
-	var el = div.firstChild;
-
-	if (el.click) el.click();
-	else if (el.fireEvent) el.fireEvent('onclick');
+	if (a.click) a.click();
+	else if (a.fireEvent) a.fireEvent('onclick');
 	else {
 		var evObj = document.createEvent('Events');
 		evObj.initEvent('click', true, false);
-		el.dispatchEvent(evObj);
+		a.dispatchEvent(evObj);
 	}
 
-	document.body.removeChild(div);
+	document.body.removeChild(a);
 }
 
 /**
@@ -265,6 +239,11 @@ function createAnchor(attrs, listeners) {
 	Object.keys(listeners || {}).forEach(function (k) {
 		a[k] = listeners[k];
 	});
+
+	/**
+	 * A hook to prevent bubbling of events from this element.
+	 */
+	a.setAttribute('class', 'anchor-wrapper');
 
 	return a;
 }
