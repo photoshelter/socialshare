@@ -12,7 +12,7 @@ you'll use.
 
 Load socialshare.js in your document via a script tag:
 
-`<script type="text/javascript" src="./socialshare.js"></script>`
+`<script type="text/javascript" src="socialshare.js"></script>`
 
 Or within JavaScript via CommonJS:
 
@@ -36,7 +36,8 @@ Here's the function's signature:
 `socialShare({String} service [, {Object} data, {Function} callback])`
 
 Now let's look at the options that can be passed in for particular 
-services via an example call for each.
+services via an example call for each. For each service, the `url` property's
+default value will be the current page, i.e., `window.location.href`.
 
 ### Facebook
 
@@ -54,13 +55,13 @@ socialShare(
 ### Twitter 
 
 Twitter has the same options as facebook, plus you can pass in default tweet
-text:
+text via `caption`:
 
 ```javascript
 socialShare(
   'twitter', 
   { url: 'http://some-url-other-than-window-dot-location',
-    twitter: { text: 'Whoah twitterers, check out this thing!' }},
+    caption: 'Whoah twitterers, check out this thing!' },
   function() { console.log('Share succeeded!'); }
 );
 ```
@@ -78,21 +79,22 @@ socialShare(
 
 ### Pinterest 
 
-Pinterest takes a url, required image url, and some text to display with the image.
+Pinterest takes a url, required image url, and text to display with the
+image via `caption`.
 
 ```javascript
 socialShare(
   'pinterest', 
   { url: 'http://some-url-other-than-window-dot-location',
     imgUrl: 'http://some-url/image.png',
-    note: 'What a neat image!' }
+    caption: 'What a neat image!' }
 );
 ```
 
 ### Email
 
 Email, which is to say, popping open the user's native email client, accepts
-a few parameters to prepopulate the message.. 
+a few parameters to prepopulate the message.
 
 ```javascript
 socialShare(

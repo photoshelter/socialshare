@@ -76,8 +76,7 @@ TwitterShare.prototype = Object.create(SocialShare.prototype);
 /**
  * @param {Object} data
  * @param {String} data.url
- * @param {Object} data.twitter
- * @param {String} data.twitter.text
+ * @param {String} data.caption
  * @param {Object} cb
  * @requires Twitter SDK: https://dev.twitter.com/web/javascript
  */
@@ -92,7 +91,7 @@ TwitterShare.prototype.share = function(data, cb) {
 	var tweetIntentUrl = 'https://twitter.com/intent/tweet?';
 	var queryParams = {
 		url: data.url || window.location.href,
-		text: data && data.twitter ? data.twitter.text : ''
+		text: data.caption || ''
 	};
 	var href = tweetIntentUrl + makeQueryString(queryParams);
 	simulateAnchorClick({href: href});
@@ -149,6 +148,9 @@ PinterestShare.prototype = Object.create(SocialShare.prototype);
 
 /**
  * @param {Object} data
+ * @param {String} data.url
+ * @param {String} data.imgUrl
+ * @param {String} data.caption
  * @requires Pinterest JS SDK: https://developers.pinterest.com/docs/sdks/js/
  * The pinterest library must be loaded with the script tag containing the
  * following attribute: data-pin-build="parsePinBtns". This exposes
@@ -161,7 +163,7 @@ PinterestShare.prototype.share = function(data) {
 
 	data = data || {};
 
-	PDK.pin(data.imgUrl, data.note, data.url);
+	PDK.pin(data.imgUrl, data.caption, data.url);
 };
 
 /**
@@ -172,7 +174,6 @@ EmailShare.prototype = Object.create(SocialShare.prototype);
 
 /**
  * @param {Object} data
-
  * @param {String} data.to
  * @param {String} data.subject
  * @param {String} data.body
