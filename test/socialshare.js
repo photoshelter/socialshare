@@ -147,10 +147,6 @@ describe('SocialShare', function() {
 	});
 
 	describe('share()', function () {
-		beforeEach(function () {
-			window.FB = { ui: function (cfg, cb) {}};
-			window.twttr = fakeTwitter;
-		});
 		it('blows up if ya try and use an invalid service', function () {
 			assert.throws(function () {
 				share('derp');

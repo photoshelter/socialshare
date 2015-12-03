@@ -7,12 +7,14 @@
     "test": "test"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "minify": "uglifyjs socialshare.js --comments -o socialshare.min.js"
   },
   "author": "PhotoShelter",
   "license": "Apache 2.0",
   "dependencies": {
     "jsdom": "~3.1.2",
-    "mocha": "~2.2.5"
+    "mocha": "~2.2.5",
+    "uglify-js": "^2.5.0"
   }
 }
